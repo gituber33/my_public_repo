@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000"
+    environment:
+      - FLASK_ENV=development  # Configure Flask pour le développement
+    volumes:
+      - ./app:/app  # Montre le répertoire local ./app dans le conteneur
+    restart: always # Redémarre le conteneur sauf s'il a été arrêté manuellement
+    networks:
+      web-cache:
+        ipv4_address: 172.25.25.10
+
+  puppeteer:
+    build: ./puppeteer
+    depends_on:
+      - web
+    restart: always  # Redémarre le conteneur automatiquement en cas de panne
+    expose:
+      - "3000"
+    networks:
+      web-cache:
+        ipv4_address: 172.25.25.11
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    depends_on:
+      - web
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx_conf/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      web-cache:
+        ipv4_address: 172.25.25.12
+networks:
+  web-cache:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.25.0.0/16"

@@ -1,0 +1,9 @@
+{
+  "name": "puppeteer-flask-test",
+  "version": "1.0.0",
+  "description": "Test Flask app using Puppeteer",
+  "main": "index.js",
+  "dependencies": {
+    "puppeteer": "^19.0.0"
+  }
+}

@@ -1,0 +1,30 @@
+<!-- templates/contact.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Admin</title>
+</head>
+<body>
+    <div>
+        <div>
+            <img src="{{ url_for('static', filename='home.jpg') }}" alt="Home">
+        </div>
+    </div>
+    <h1>Contactez l'Admin</h1>
+    <form method="POST">
+        <label for="message">Votre message:</label>
+        <textarea id="message" name="message" required></textarea>
+        <button type="submit">Envoyer</button>
+    </form>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <ul>
+            <li class="{{ messages[0][0] }}">{{ messages[0][1] }}</li>
+        </ul>
+    {% endif %}
+{% endwith %}
+    <p><a href="{{ url_for('secret') }}">Retour à votre secret</a></p>
+    <p><a href="{{ url_for('get_latest_message') }}">Voir dernier message envoyé</a></p>
+</body>
+</html>

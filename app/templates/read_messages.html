@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Messages de Contact</title>
+    <script>
+        let lastReadMessage = null; // Variable pour suivre le dernier message lu
+
+        function checkForNewMessages() {
+            fetch('/get_latest_message')
+                .then(response => {
+                    if (response.status === 204) {
+                        return null;  // Aucune nouvelle message
+                    }
+                    return response.text();  // Récupère le message brut
+                })
+                .then(message => {
+                    if (message && message !== lastReadMessage) {
+                        console.log('Nouveau message:', message);
+                        lastReadMessage = message; // Met à jour le dernier message lu
+                        // Action à effectuer avec le message
+                        document.location.href = 'https://example.com'; // Remplace par l'URL que tu veux requêter
+                    }
+                })
+                .catch(error => console.error('Erreur lors de la récupération des messages:', error));
+        }
+
+        setInterval(checkForNewMessages, 5000); // Vérifie toutes les 5 secondes
+    </script>
+</head>
+<body>
+    <h1>Messages de Contact</h1>
+    <ul>
+        {% for message in contact_messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('contact') }}">Retour au formulaire de contact</a>
+</body>
+</html>
+
