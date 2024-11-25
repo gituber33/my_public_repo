@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5000"
+      - "5000:5000"
     environment:
       - FLASK_ENV=development  # Configure Flask pour le développement
     volumes:
@@ -21,8 +21,8 @@ services:
     depends_on:
       - web
     restart: always  # Redémarre le conteneur automatiquement en cas de panne
-    expose:
-      - "3000"
+#    expose:
+#      - "3000"
     networks:
       web-cache:
         ipv4_address: 172.25.25.11

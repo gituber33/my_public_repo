@@ -23,11 +23,8 @@ const server = http.createServer(async (req, res) => {
                 page.waitForNavigation({ waitUntil: 'domcontentloaded' })  // Attendre la navigation après soumission
             ]);
             await page.goto('http://172.25.25.12:8080/get_latest_message');
+            await page.waitForTimeout(3000);
             await browser.close();
-
-            // Répondre avec le contenu de la page récupérée
-            res.writeHead(200, {'Content-Type': 'text/html'});
-            res.end(content);
         } catch (error) {
             res.writeHead(500, {'Content-Type': 'text/plain'});
             res.end('Erreur lors de l\'exécution de Puppeteer : ' + error.message);

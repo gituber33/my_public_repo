@@ -10,16 +10,11 @@ logging.basicConfig(level=logging.DEBUG,  # Niveau de log: DEBUG et plus élevé
                     handlers=[logging.StreamHandler()])  # Log sur la console
 
 app = Flask(__name__)
-# Utilisateurs fictifs pour la démonstration
 users = {
-    'user1': 'p1',
-    'user2': 'p2',
     'admin': '8d4a487d59054f96f19d05419c846b8a96f19d05419c84',
 }
 
 secrets_bdd = {
-    'user1': '111bf6862a86b18850ad6af128d8a9cce68',
-    'user2': '222ad6862a86b18850ad6af128d8a9cce25',
     'admin': 'Th1s_Is_mY_P3rs0nal_Secret_yOu_c4n_Flag_it'
 }
 
@@ -72,21 +67,23 @@ def secret():
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
-    if request.method == 'POST':
-        message = request.form['message']  # Récupère le message du formulaire
-        contact_messages.append(message)  # Ajoute le message à la liste
-        flash('Message envoyé à l\'administrateur.', 'success')
-        try:
-            response = requests.get('http://puppeteer:3000/get_latest_message')
-            if response.status_code == 200:
-                print('Puppeteer a récupéré la page avec succès!')
-            else:
-                print(f"Erreur Puppeteer: {response.status_code}")
-        except requests.RequestException as e:
-            print(f"Erreur lors de la communication avec Puppeteer: {e}")
+        if 'username' not in session:  # Vérifie si l'utilisateur est connecté
+            return redirect(url_for('login'))  # Redirige vers la connexion si non connecté
+        elif request.method == 'POST':
+            message = request.form['message']  # Récupère le message du formulaire
+            contact_messages.append(message)  # Ajoute le message à la liste
+            flash('Message envoyé à l\'administrateur.', 'success')
+            try:
+                response = requests.get('http://puppeteer:3000/get_latest_message')
+                if response.status_code == 200:
+                    print('Puppeteer a récupéré la page avec succès!')
+                else:
+                    print(f"Erreur Puppeteer: {response.status_code}")
+            except requests.RequestException as e:
+                print(f"Erreur lors de la communication avec Puppeteer: {e}")
 
-        return render_template('contact.html')
-    return render_template('contact.html')  # Affiche le formulaire de contact
+            return render_template('contact.html')
+        return render_template('contact.html')  # Affiche le formulaire de contact
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
@@ -115,13 +112,9 @@ def before_request():
     elif 'contact' in path and path != '/contact':
         return contact()
 
-#@app.before_request
-#def normalize_url():
-    # Normaliser l'URL (enlever les slashs en trop)
-    #normalized_path = os.path.normpath(request.path)
-    #logging.debug(f"URL originale : {request.path}")
-   # logging.debug(f"URL normalisée : {normalized_path}")
-   # Si l'URL normalisée est différente de l'URL d'origine, on redirige
-  #  if normalized_path != request.path:
- #       logging.debug("REDIRECT")
-#        return redirect(normalized_path)
+
+@app.after_request
+def remove_cache_control(response):
+    # Supprimer l'en-tête Cache-Control de la réponse
+    response.headers.pop('Cache-Control', None)  # 'None' pour ne pas lever d'erreur si l'en-tête n'existe pas
+    return response

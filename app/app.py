@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.DEBUG,  # Niveau de log: DEBUG et plus élevé
                     handlers=[logging.StreamHandler()])  # Log sur la console
 
 # Configuration de l'application
-app.secret_key = 'your_secret_key'  # Remplace par une clé secrète sécurisée
+app.secret_key = secrets.token_hex(32)  # Remplace par une clé secrète sécurisée
 app.config['SESSION_TYPE'] = 'filesystem'  # Utiliser le système de fichiers pour stocker les sessions
 app.config['SESSION_PERMANENT'] = False  # Les sessions ne sont pas permanentes
 app.config['SESSION_USE_SIGNER'] = True  # Signe les cookies de session pour plus de sécurité
