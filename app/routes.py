@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_from_directory
 import secrets
 import os.path
 import logging
@@ -20,6 +20,14 @@ secrets_bdd = {
 
 contact_messages = []
 read_messages = []
+
+normalize_page = ['secret','contact','login','register']
+
+@app.route('/<page>/<path:subpath>')
+def reach_correct_path(page,subpath):
+    if page in normalize_page:
+        page_var = globals().get(page)
+        return page_var()
 
 @app.route('/')
 def home():
@@ -99,22 +107,3 @@ def get_latest_message():
         latest_message = contact_messages[-1]  # Récupère le dernier
         return latest_message  # Renvoie le message brut
     return 'empty', 204  # Aucun message, renvoie un code de statut 204 No Content
-
-@app.before_request
-def before_request():
-    path = request.path
-    if 'login' in path and path != '/login':
-        return login()
-    elif 'secret' in path and path != '/secret':
-        return secret()
-    elif 'register' in path and path != '/register':
-        return register()
-    elif 'contact' in path and path != '/contact':
-        return contact()
-
-
-@app.after_request
-def remove_cache_control(response):
-    # Supprimer l'en-tête Cache-Control de la réponse
-    response.headers.pop('Cache-Control', None)  # 'None' pour ne pas lever d'erreur si l'en-tête n'existe pas
-    return response
