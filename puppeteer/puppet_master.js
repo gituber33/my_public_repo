@@ -7,6 +7,8 @@ const server = http.createServer(async (req, res) => {
     const parsedUrl = url.parse(req.url, true);
     // Lorsque la route /get_latest_message est appelée
     if (parsedUrl.pathname === '/get_latest_message' && req.method === 'GET') {
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.end('Requête reçue');
         try {
             // Démarrer le navigateur Puppeteer
             const browser = await puppeteer.launch({
@@ -18,13 +20,16 @@ const server = http.createServer(async (req, res) => {
             await page.goto('http://172.25.25.12:8080/login');
             await page.type('input[name="username"]', 'admin');
             await page.type('input[name="password"]', '8d4a487d59054f96f19d05419c846b8a96f19d05419c84');
+            console.log('Login du BOT OK');
             await Promise.all([
                 page.click('button[type="submit"]'),  // Cliquer sur le bouton de soumission
-                page.waitForNavigation({ waitUntil: 'domcontentloaded' })  // Attendre la navigation après soumission
+                page.waitForNavigation( { waitUntil: 'domcontentloaded', timeout: 5000 })  // Attendre la navigation après soumission
             ]);
-            await page.goto('http://172.25.25.12:8080/get_latest_message');
-            await page.waitForTimeout(3000);
+            await page.goto('http://172.25.25.12:8080/get_latest_message' ,{ waitUntil: 'domcontentloaded', timeout: 5000 });
+            console.log("Consultation du message OK");
+            await page.waitForTimeout(1000);
             await browser.close();
+            console.log('Fermeture');
         } catch (error) {
             res.writeHead(500, {'Content-Type': 'text/plain'});
             res.end('Erreur lors de l\'exécution de Puppeteer : ' + error.message);
