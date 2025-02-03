@@ -1,18 +1,18 @@
 <!-- templates/login.html -->
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="eng">
 <head>
     <meta charset="UTF-8">
-    <title>Connexion</title>
+    <title>Login</title>
 </head>
 <body>
-    <h1>Connexion</h1>
+    <h1>Login</h1>
     <form method="POST">
-        <label for="username">Nom d'utilisateur:</label>
+        <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
-        <label for="password">Mot de passe:</label>
+        <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
-        <button type="submit">Se connecter</button>
+        <button type="submit">Connection</button>
     </form>
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
@@ -21,6 +21,6 @@
         </ul>
     {% endif %}
 {% endwith %}
-    <p><a href="{{ url_for('register') }}">S'inscrire</a></p>
+    <p><a href="{{ url_for('register') }}">Register</a></p>
 </body>
 </html>

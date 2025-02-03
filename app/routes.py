@@ -48,7 +48,7 @@ def login():
             session['username'] = username
             return redirect(url_for('secret'))
         else:
-            flash('Nom d’utilisateur ou mot de passe incorrect.', 'danger')
+            flash('Incorrect password or username.', 'danger')
 
     return render_template('login.html')  # Affiche le formulaire de connexion
 
@@ -62,10 +62,10 @@ def register():
             users[username] = password  # Ajoute l'utilisateur
             secret = secrets.token_hex(16)
             secrets_bdd[username] = secret
-            flash('Inscription réussie ! Vous pouvez vous connecter.', 'success')
+            flash('Inscription successful. You can now login.', 'success')
             return redirect(url_for('login'))
         else:
-            flash('Nom d’utilisateur déjà pris.', 'danger')
+            flash('Username already register', 'danger')
 
     return render_template('register.html')  # Affiche le formulaire d'enregistrement
 
@@ -101,7 +101,7 @@ def contact():
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.clear()  # Efface la session de l'utilisateur
-    flash('Vous avez été déconnecté avec succès.', 'success')  # Affiche un message de succès
+    flash('Successfully disconnected.', 'success')  # Affiche un message de succès
     return redirect(url_for('home'))  # Redirige vers la page d'accueil
 
 #Fonction pour le bot_admin
