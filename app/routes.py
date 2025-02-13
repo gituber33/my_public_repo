@@ -18,7 +18,7 @@ users = {
 }
 
 secrets_bdd = {
-    'admin': 'Th1s_Is_mY_P3rs0nal_Secret_yOu_c4n_Flag_it'
+    'admin': 'RETRO{Th1s_Is_mY_P3rs0nal_Secret_yOu_c4n_Flag_it}'
 }
 
 contact_messages = []

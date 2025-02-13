@@ -7,8 +7,8 @@ services:
       dockerfile: Dockerfile
     expose:
       - "5000"
-    environment:
-      - FLASK_ENV=development  # Configure Flask pour le développement
+    #environment:
+    #  - FLASK_ENV=development  # Configure Flask pour le développement
     volumes:
       - ./app:/app  # Montre le répertoire local ./app dans le conteneur
     restart: always # Redémarre le conteneur sauf s'il a été arrêté manuellement
@@ -38,8 +38,6 @@ services:
     volumes:
       - ./nginx_conf/nginx.conf:/etc/nginx/nginx.conf:ro
     networks:
-      external_net:
-        ipv4_address: 172.52.52.12
       web-cache:
         ipv4_address: 172.25.25.12
 networks:
@@ -49,9 +47,3 @@ networks:
       driver: default
       config:
         - subnet: "172.25.0.0/16"
-  external_net:
-    driver: bridge  
-    ipam:
-      driver: default
-      config:
-        - subnet: "172.52.0.0/16"
