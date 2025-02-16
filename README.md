@@ -2,5 +2,5 @@
 To play:
 - pull the repo
 - dockercompose up
-- you can connect to 172.52.52.12:8080 to play
+- you can connect to 172.25.25.12:8080 to play
 - find the admin's secret
